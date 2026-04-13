@@ -71,6 +71,15 @@ public_users.get('/author/:author',function (req, res) {
       booksByAuthor[key] = books[key];
     }
   });
+  public_users.get('/async-author/:author', async function (req, res) {
+    try {
+      const author = req.params.author;
+      const response = await axios.get(`http://localhost:5000/author/${author}`);
+      res.send(JSON.stringify(response.data, null, 4));
+    } catch (error) {
+      res.status(500).json({message: "Error fetching books by author", error: error.message});
+    }
+  });
 
   res.send(JSON.stringify(booksByAuthor, null, 4));
   //Write your code here
