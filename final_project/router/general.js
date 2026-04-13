@@ -63,28 +63,34 @@ public_users.get('/async-isbn/:isbn', async function (req, res) {
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
     const author = req.params.author;
-  const bookKeys = Object.keys(books);
-  const booksByAuthor = {};
+    const bookKeys = Object.keys(books);
+    const booksByAuthor = {};
   
   bookKeys.forEach(key => {
     if(books[key].author === author) {
       booksByAuthor[key] = books[key];
     }
   });
-  public_users.get('/async-author/:author', async function (req, res) {
-    try {
-      const author = req.params.author;
-      const response = await axios.get(`http://localhost:5000/author/${author}`);
-      res.send(JSON.stringify(response.data, null, 4));
-    } catch (error) {
-      res.status(500).json({message: "Error fetching books by author", error: error.message});
-    }
-  });
+  if(Object.keys(booksByAuthor).length === 0) {
+    return res.status(404).json({message: "No books found for this author"});
+  }
 
   res.send(JSON.stringify(booksByAuthor, null, 4));
-  //Write your code here
-  //return res.status(300).json({message: "Yet to be implemented"});
 });
+  public_users.get('/async-author/:author', async function (req, res) {
+    try {
+        const author = req.params.author;
+        const response = await axios.get(`http://localhost:5000/author/${author}`);
+        
+        if(Object.keys(response.data).length === 0) {
+          return res.status(404).json({message: "No books found for this author"});
+        }
+        
+        res.send(JSON.stringify(response.data, null, 4));
+      } catch (error) {
+        res.status(500).json({message: "Error fetching books by author", error: error.message});
+      }
+    });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
