@@ -98,6 +98,17 @@ public_users.get('/title/:title',function (req, res) {
     }
   });
 
+  // Get books by Title using async-await with Axios
+public_users.get('/async-title/:title', async function (req, res) {
+    try {
+      const title = req.params.title;
+      const response = await axios.get(`http://localhost:5000/title/${title}`);
+      res.send(JSON.stringify(response.data, null, 4));
+    } catch (error) {
+      res.status(500).json({message: "Error fetching books by title", error: error.message});
+    }
+  });
+
   res.send(JSON.stringify(booksByTitle, null, 4));
   //Write your code here
   //return res.status(300).json({message: "Yet to be implemented"});
