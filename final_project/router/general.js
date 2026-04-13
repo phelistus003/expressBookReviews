@@ -44,8 +44,19 @@ public_users.get('/author/:author',function (req, res) {
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
+    const title = req.params.title;
+  const bookKeys = Object.keys(books);
+  const booksByTitle = {};
+
+  bookKeys.forEach(key => {
+    if(books[key].title === title) {
+      booksByTitle[key] = books[key];
+    }
+  });
+
+  res.send(JSON.stringify(booksByTitle, null, 4));
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  //return res.status(300).json({message: "Yet to be implemented"});
 });
 
 //  Get book review
