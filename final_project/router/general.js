@@ -43,10 +43,21 @@ public_users.get('/async-books', async function (req, res) {
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
+
     const isbn = req.params.isbn;
     res.send(JSON.stringify(books[isbn], null, 4));
-  //Write your code here
- // return res.status(300).json({message: "Yet to be implemented"});
+});
+// Get book by ISBN using async-await with Axios
+public_users.get('/async-isbn/:isbn', async function (req, res) {
+  try {
+    const isbn = req.params.isbn;
+    const response = await axios.get(`http://localhost:5000/isbn/${isbn}`);
+    res.send(JSON.stringify(response.data, null, 4));
+  } catch (error) {
+    res.status(500).json({message: "Error fetching book", error: error.message});
+  }
+
+  
  });
   
 // Get book details based on author
